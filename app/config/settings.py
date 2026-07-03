@@ -2,7 +2,7 @@ import json
 
 def load_settings():
     with open(
-        "C:/Users/user/Desktop/Atlas/app/config/settings.json",
+        "app/config/settings.json",
         "r",
         encoding="utf-8"
     ) as file:
@@ -13,7 +13,7 @@ def load_settings():
 
 def load_watchlist():
     with open(
-        "C:/Users/user/Desktop/Atlas/app/config/watchlist.json",
+        "app/config/watchlist.json",
         "r",
         encoding="utf-8"
     ) as file:
