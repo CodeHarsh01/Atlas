@@ -18,7 +18,7 @@ from app.analysis.analysis import analyze_stock
 
 from app.indicators import add_all_indicators
 from app.market.fetcher import fetch_stock_data
-
+from app.scheduler.market_schedule import should_run
 from app.config.settings import (
     load_settings,
     load_watchlist
@@ -26,6 +26,8 @@ from app.config.settings import (
 
 from app.logger.logger import log
 from app.logger.error_logger import log_error
+from app.scheduler.market_schedule import should_run
+from app.scheduler.run_lock import already_ran, mark_run
 
 
 def run_daily():
@@ -223,7 +225,23 @@ if __name__ == "__main__":
 
     try:
 
-        run_daily()
+        if should_run():
+
+            print("Trading window detected.")
+
+            run_daily()
+
+        elif already_ran():
+
+            print("ATLAS already executed for this session.")
+
+        else:
+
+            print("Trading window detected.")
+
+            run_daily()
+
+            mark_run()
 
     except Exception as error:
 

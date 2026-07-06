@@ -2,15 +2,14 @@ name: ATLAS Daily Run
 
 on:
   schedule:
-    # 9:15 AM IST = 03:45 UTC
-    - cron: "45 3 * * 1-5"
 
-    # 3:30 PM IST = 10:00 UTC
-    - cron: "0 10 * * 1-5"
+    # Every 15 minutes during Indian market hours
+    - cron: "*/15 3-10 * * 1-5"
 
   workflow_dispatch:
 
 jobs:
+
   atlas:
 
     runs-on: ubuntu-latest
