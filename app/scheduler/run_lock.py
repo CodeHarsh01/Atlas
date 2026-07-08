@@ -1,84 +1,58 @@
 import json
-import os
+from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-LOCK_FILE = "app/scheduler/run_lock.json"
+LOCK_FILE = Path("run_lock.json")
 
 
-def _load():
+def current_session():
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
 
-    if not os.path.exists(LOCK_FILE):
+    if now.hour < 12:
+        return "morning"
 
-        return {
-
-            "morning": "",
-
-            "afternoon": ""
-
-        }
-
-    with open(LOCK_FILE, "r") as file:
-
-        return json.load(file)
-
-
-def _save(data):
-
-    with open(LOCK_FILE, "w") as file:
-
-        json.dump(data, file, indent=4)
+    return "afternoon"
 
 
 def already_ran():
-
-    data = _load()
-
-    now = datetime.now(
-
+    today = datetime.now(
         ZoneInfo("Asia/Kolkata")
+    ).strftime("%Y-%m-%d")
 
+    session = current_session()
+
+    if not LOCK_FILE.exists():
+        return False
+
+    with open(LOCK_FILE, "r") as file:
+        data = json.load(file)
+
+    return (
+        data.get(today, {})
+        .get(session, False)
     )
-
-    today = now.strftime("%Y-%m-%d")
-
-    hour = now.hour
-
-    minute = now.minute
-
-    # Morning Session
-    if 9 <= hour < 10:
-
-        return data["morning"] == today
-
-    # Afternoon Session
-    if 15 <= hour < 16:
-
-        return data["afternoon"] == today
-
-    return False
 
 
 def mark_run():
-
-    data = _load()
-
-    now = datetime.now(
-
+    today = datetime.now(
         ZoneInfo("Asia/Kolkata")
+    ).strftime("%Y-%m-%d")
 
-    )
+    session = current_session()
 
-    today = now.strftime("%Y-%m-%d")
+    if LOCK_FILE.exists():
 
-    hour = now.hour
+        with open(LOCK_FILE, "r") as file:
+            data = json.load(file)
 
-    if 9 <= hour < 10:
+    else:
+        data = {}
 
-        data["morning"] = today
+    if today not in data:
+        data[today] = {}
 
-    elif 15 <= hour < 16:
+    data[today][session] = True
 
-        data["afternoon"] = today
-
-    _save(data)
+    with open(LOCK_FILE, "w") as file:
+        json.dump(data, file, indent=4)
