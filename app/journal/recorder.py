@@ -1,13 +1,6 @@
-from app.journal.storage import (
-    load_journal,
-    save_journal
-)
+from app.journal.storage import add_trade
 
 
 def record_trade(position):
 
-    journal = load_journal()
-
-    journal.append(position)
-
-    save_journal(journal)
+    add_trade(position)
