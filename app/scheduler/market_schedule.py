@@ -15,8 +15,7 @@ def should_run():
         return True
 
     # Afternoon: 3:30 - 3:59
-    # Temporary test window
-    if 15 * 60 + 30 <= minutes < 16 * 60 + 30:
+    if 15 * 60 + 30 <= minutes < 16 * 60:
         return True
 
     return False

@@ -1,0 +1,16 @@
+[19:23:06] ERROR : localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6a4fa7a2a0727d387b29cf6e, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+[19:24:59] ERROR : localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6a4fa8142c87c43a89d8e52a, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+[19:32:33] ERROR : bad auth : Authentication failed., full error: {'ok': 0, 'errmsg': 'bad auth : Authentication failed.', 'code': 8000, 'codeName': 'AtlasError'}
+[19:36:49] ATLAS Started
+[19:36:49] Updated existing positions
+[19:36:49] Closed Positions : 0
+[19:37:00] Market Scan Completed : 13 Stocks
+[19:37:00] New BUY Signals : 1
+[19:37:00] ERROR : batch op errors occurred, full error: {'writeErrors': [{'index': 0, 'code': 13297, 'errmsg': 'db already exists with different case already have: [Atlas] trying to create [atlas]', 'op': {'symbol': 'SUNPHARMA', 'buy_date': '2026-07-09', 'buy_price': 1938.7, 'quantity': 4, 'capital': 7754.8, 'highest_price': 1938.7, 'current_price': 1938.7, 'current_value': 7754.8, 'pnl': 0, 'pnl_percent': 0, 'score': 93, 'signal': 'STRONG BUY', 'status': 'OPEN', '_id': ObjectId('6a4fab0414ea7d7b5b7a38c3')}}], 'writeConcernErrors': [], 'nInserted': 0, 'nUpserted': 0, 'nMatched': 0, 'nModified': 0, 'nRemoved': 0, 'upserted': []}
+[19:39:07] ATLAS Started
+[19:39:07] Updated existing positions
+[19:39:07] Closed Positions : 0
+[19:39:12] Market Scan Completed : 13 Stocks
+[19:39:12] New BUY Signals : 1
+[19:39:15] Telegram Notifications Sent
+[19:39:15] ATLAS Finished Successfully

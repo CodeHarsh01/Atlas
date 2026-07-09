@@ -1,11 +1,12 @@
 import os
 from pymongo import MongoClient
 
-MONGO_URI = os.getenv("MONGO_URI")
+# MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URI = "mongodb+srv://Atlas:Atlas12345@cluster0.frwnial.mongodb.net/?appName=Cluster0"
 
 client = MongoClient(MONGO_URI)
 
-db = client["atlas"]
+db = client["Atlas"]
 
 # Collections
 positions = db["positions"]
