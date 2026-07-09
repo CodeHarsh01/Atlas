@@ -1,64 +1,29 @@
-import json
-from pathlib import Path
-
-POSITIONS_FILE = Path(__file__).resolve().parent / "positions.json"
-
-
-def create_storage():
-    """
-    Create positions.json if it doesn't exist.
-    """
-
-    if not POSITIONS_FILE.exists():
-
-        with open(
-            POSITIONS_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
-
-            json.dump(
-                {"positions": []},
-                file,
-                indent=4
-            )
+from app.database.mongo import positions
 
 
 def load_positions():
-    """
-    Load all positions.
-    """
 
-    create_storage()
+    return list(
 
-    with open(
-        POSITIONS_FILE,
-        "r",
-        encoding="utf-8"
-    ) as file:
+        positions.find(
 
-        data = json.load(file)
+            {},
 
-    return data["positions"]
+            {
 
+                "_id": 0
 
-def save_positions(positions):
-    """
-    Save all positions.
-    """
-
-    with open(
-        POSITIONS_FILE,
-        "w",
-        encoding="utf-8"
-    ) as file:
-
-        json.dump(
-
-            {"positions": positions},
-
-            file,
-
-            indent=4
+            }
 
         )
+
+    )
+
+
+def save_positions(all_positions):
+
+    positions.delete_many({})
+
+    if all_positions:
+
+        positions.insert_many(all_positions)
