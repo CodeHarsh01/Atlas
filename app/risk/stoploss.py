@@ -1,52 +1,22 @@
 """
 Stop Loss Engine
 
-Calculates stop loss price and
-checks whether it has been hit.
+Uses the stored stop-loss price.
+Supports:
+- ATR Stop
+- Break-even Stop
+- Trailing Stop
 """
 
 
-def calculate_stop_loss(
-    buy_price,
-    stop_loss_percent=5
-):
-    """
-    Calculate stop loss price.
-
-    Example:
-        Buy = 100
-        Stop = 5%
-
-        Stop Price = 95
-    """
-
-    return round(
-
-        buy_price *
-
-        (1 - stop_loss_percent / 100),
-
-        2
-
-    )
-
-
 def stop_loss_hit(
-    buy_price,
-    current_price,
-    stop_loss_percent=5
+    stop_price,
+    current_price
 ):
     """
-    Returns True if stop loss hit.
+    Returns True if current price
+    falls below the stored stop price.
     """
-
-    stop_price = calculate_stop_loss(
-
-        buy_price,
-
-        stop_loss_percent
-
-    )
 
     return {
 

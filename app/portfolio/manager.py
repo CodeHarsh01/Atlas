@@ -4,13 +4,14 @@ from app.portfolio.optimizer import optimize_portfolio
 from app.config.settings import load_settings
 from app.portfolio.allocator import allocate_capital
 from app.portfolio.position_size import calculate_position_size
+from app.risk.atr_stop import calculate_atr_stop
+from app.risk.atr_target import calculate_atr_target
 
 config = load_settings()
 MAX_POSITIONS = config["max_open_positions"]
 
 
 def build_portfolio(stocks, capital):
-
     """
     Build final portfolio from analyzed stocks.
     """
@@ -20,17 +21,12 @@ def build_portfolio(stocks, capital):
     # ==========================
 
     tradable = [
-
         stock
-
         for stock in stocks
-
         if stock["decision"]["tradable"]
-
     ]
 
     if not tradable:
-
         return []
 
     # ==========================
@@ -38,16 +34,10 @@ def build_portfolio(stocks, capital):
     # ==========================
 
     tradable.sort(
-
-        key=lambda stock:
-
-        stock["decision"]["score"],
-
+        key=lambda stock: stock["decision"]["score"],
         reverse=True
-
     )
-    
-    
+
     # ==========================
     # Step 3 : Maximum Positions
     # ==========================
@@ -57,8 +47,8 @@ def build_portfolio(stocks, capital):
         capital,
         config
     )
-    selected = optimized["selected_stocks"]
 
+    selected = optimized["selected_stocks"]
     investable = optimized["investable_capital"]
 
     # ==========================
@@ -66,55 +56,98 @@ def build_portfolio(stocks, capital):
     # ==========================
 
     allocated_stocks = allocate_capital(
-
         selected,
-
         investable
-
     )
+
     allocated_stocks = redistribute_capital(
         allocated_stocks,
         investable
     )
+
     # ==========================
-    # Step 5 : Position Size
+    # Step 5 : Position Size + ATR Stop
     # ==========================
 
     portfolio = []
 
     for stock in allocated_stocks:
 
+        # ATR Stop Loss
+        stop_loss = calculate_atr_stop(
+            stock["price"],
+            stock["atr"]
+        )
+        risk = round(
+            stock["price"] - stop_loss,
+            2
+        )
+        # ATR Target 
+        target = calculate_atr_target(
+
+            stock["price"],
+
+            stock["atr"]
+
+        )
+        reward = round(
+
+            target - stock["price"],
+
+            2
+
+        )
+        rr = round(
+
+            reward / risk,
+
+            2
+
+)
+
         position = calculate_position_size(
-
             stock["allocation"],
-
             stock["price"]
-
         )
 
         if position is None:
-
             continue
 
         portfolio.append({
 
-            "symbol": stock["symbol"],
+        "symbol": stock["symbol"],
 
-            "price": stock["price"],
+        "price": stock["price"],
 
-            "score": stock["decision"]["score"],
+        "score": stock["decision"]["score"],
 
-            "signal": stock["decision"]["signal"],
+        "signal": stock["decision"]["signal"],
 
-            "allocation": round(stock["allocation"], 2),
+        "allocation": round(stock["allocation"],2),
 
-            "quantity": position["quantity"],
+        "quantity": position["quantity"],
 
-            "capital_used": position["capital_used"],
+        "capital_used": position["capital_used"],
 
-            "remaining": position["remaining"]
+        "remaining": position["remaining"],
 
-        })
+        "atr": stock["atr"],
+
+        "stop_loss": stop_loss,
+
+        "risk_per_share": risk,
+
+        "target": target,
+
+        "reward_per_share": reward,
+
+        "rr": rr
+
+    })
+
+    # ==========================
+    # Step 6 : Portfolio Summary
+    # ==========================
 
     summary = create_summary(
         portfolio,
@@ -122,7 +155,7 @@ def build_portfolio(stocks, capital):
         optimized
     )
 
-    print(f"\n📊 Portfolio Summary:")
+    print("\n📊 Portfolio Summary:")
     print(f"   Capital: ₹{summary['capital']}")
     print(f"   Invested: ₹{summary['invested']}")
     print(f"   Cash Reserved: ₹{summary['cash_reserved']}")

@@ -112,13 +112,9 @@ def run_daily():
 
             "symbol": symbol,
 
-            "price": round(
+            "price": round(float(latest["Close"]),2),
 
-                float(latest["Close"]),
-
-                2
-
-            ),
+            "atr": round(float(latest["ATR"]),2),
 
             "decision": {
 

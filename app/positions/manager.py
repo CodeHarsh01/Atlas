@@ -47,6 +47,12 @@ def add_position(position):
 
         "quantity": position["quantity"],
 
+        "atr": position["atr"],
+
+        "stop_loss": position["stop_loss"],
+
+        "risk_per_share": position["risk_per_share"],
+
         "capital": position["capital_used"],
 
         "highest_price": position["price"],

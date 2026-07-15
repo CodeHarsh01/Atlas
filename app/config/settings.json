@@ -30,7 +30,8 @@
     "minimum_position_amount": 1000,
     "cash_reserve_percent": 10,
     "test_mode": true,
-     "auto_add_positions": true
+     "auto_add_positions": true,
+     "time_stop_days": 20,
     
 }
 

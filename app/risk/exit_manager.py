@@ -1,19 +1,22 @@
+from app.risk.time_stop import time_stop_hit
 from app.risk.sell_signal import generate_sell_signal
 from app.risk.stoploss import stop_loss_hit
-from app.risk.trailing_stop import trailing_stop
 
 
 def should_exit(
     score,
-    buy_price,
     current_price,
-    highest_price,
-    stop_loss_percent=5,
-    trailing_percent=5
+    stop_loss,
+    buy_date,
+    time_stop_days
 ):
     """
-    Master exit decision.
+    Master Exit Decision
     """
+
+    # ==========================
+    # Technical SELL Signal
+    # ==========================
 
     sell = generate_sell_signal(score)
 
@@ -27,13 +30,15 @@ def should_exit(
 
         }
 
+    # ==========================
+    # Stop Loss
+    # ==========================
+
     stop = stop_loss_hit(
 
-        buy_price,
+        stop_price=stop_loss,
 
-        current_price,
-
-        stop_loss_percent
+        current_price=current_price
 
     )
 
@@ -47,25 +52,31 @@ def should_exit(
 
         }
 
-    trail = trailing_stop(
+    # ==========================
+    # Time Stop
+    # ==========================
 
-        highest_price,
+    time = time_stop_hit(
 
-        current_price,
+        buy_date=buy_date,
 
-        trailing_percent
+        max_days=time_stop_days
 
     )
 
-    if trail["hit"]:
+    if time["hit"]:
 
         return {
 
             "exit": True,
 
-            "reason": "TRAILING_STOP"
+            "reason": "TIME_STOP"
 
         }
+
+    # ==========================
+    # Hold
+    # ==========================
 
     return {
 
