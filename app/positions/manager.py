@@ -39,40 +39,41 @@ def add_position(position):
 
     positions.append({
 
-        "symbol": position["symbol"],
+    "symbol": position["symbol"],
 
-        "buy_date": datetime.now().strftime("%Y-%m-%d"),
+    "buy_date": datetime.now().strftime("%Y-%m-%d"),
 
-        "buy_price": position["price"],
+    "buy_price": position["price"],
 
-        "quantity": position["quantity"],
+    "quantity": position["quantity"],
 
-        "atr": position["atr"],
+    # ATR Risk Management
+    "atr": position["atr"],
+    "stop_loss": position["stop_loss"],
+    "target": position["target"],
+    "risk_per_share": position["risk_per_share"],
+    "reward_per_share": position["reward_per_share"],
+    "rr": position["rr"],
 
-        "stop_loss": position["stop_loss"],
+    "capital": position["capital_used"],
 
-        "risk_per_share": position["risk_per_share"],
+    "highest_price": position["price"],
 
-        "capital": position["capital_used"],
+    "current_price": position["price"],
 
-        "highest_price": position["price"],
+    "current_value": position["capital_used"],
 
-        "current_price": position["price"],
+    "pnl": 0,
 
-        "current_value": position["capital_used"],
+    "pnl_percent": 0,
 
-        "pnl": 0,
+    "score": position["score"],
 
-        "pnl_percent": 0,
+    "signal": position["signal"],
 
-        "score": position["score"],
+    "status": "OPEN"
 
-        "signal": position["signal"],
-
-        "status": "OPEN"
-
-    })
-
+})
     save_positions(positions)
 
     return True
