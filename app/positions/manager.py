@@ -71,7 +71,13 @@ def add_position(position):
 
     "signal": position["signal"],
 
-    "status": "OPEN"
+    "status": "OPEN",
+
+# V2 fields
+    "partial_booked": False,
+    "partial_quantity": 0,
+    "remaining_quantity": position["quantity"],
+    "break_even": False
 
 })
     save_positions(positions)
