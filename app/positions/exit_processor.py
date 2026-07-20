@@ -63,33 +63,23 @@ def process_exits():
         position["current_price"] = current_price
 
         position["current_value"] = round(
-
             current_price * position["quantity"],
-
             2
-
         )
 
         if current_price > position["highest_price"]:
-
             position["highest_price"] = current_price
 
         position["pnl"] = round(
-
             (current_price - position["buy_price"]) *
             position["quantity"],
-
             2
-
         )
 
         position["pnl_percent"] = round(
-
             ((current_price - position["buy_price"])
              / position["buy_price"]) * 100,
-
             2
-
         )
 
         # ==================================
@@ -104,14 +94,20 @@ def process_exits():
         # Partial Profit Booking
         # ==================================
 
-        if should_partial_book(
+        target = position.get("target")
 
-            current_price=position["current_price"],
+        partial_booked = position.get(
+            "partial_booked",
+            False
+        )
 
-            target=position["target"],
-
-            partial_booked=position["partial_booked"]
-
+        if (
+            target and
+            should_partial_book(
+                current_price=current_price,
+                target=target,
+                partial_booked=partial_booked
+            )
         ):
 
             sell_qty = position["quantity"] // 2
@@ -121,28 +117,24 @@ def process_exits():
                 position["quantity"] -= sell_qty
 
                 position["capital"] = round(
-
                     position["buy_price"] *
                     position["quantity"],
-
                     2
-
                 )
 
                 position["partial_booked"] = True
 
+                # Move Stop Loss to Break Even
+                position["stop_loss"] = position["buy_price"]
+
+                position["break_even"] = True
+
                 print()
-
                 print("=" * 50)
-
                 print("PARTIAL PROFIT BOOKED")
-
                 print(f"Symbol : {position['symbol']}")
-
                 print(f"Sold Qty : {sell_qty}")
-
                 print(f"Remaining Qty : {position['quantity']}")
-
                 print("=" * 50)
 
         # ==================================
@@ -153,13 +145,20 @@ def process_exits():
 
             score=score["score"],
 
-            current_price=position["current_price"],
+            current_price=current_price,
 
             stop_loss=position["stop_loss"],
 
             buy_date=position["buy_date"],
 
-            time_stop_days=settings["time_stop_days"]
+            time_stop_days=settings["time_stop_days"],
+
+            buy_price=position["buy_price"],
+
+            break_even=position.get(
+                "break_even",
+                False
+            )
 
         )
 
@@ -169,18 +168,15 @@ def process_exits():
 
             position["sell_date"] = datetime.now().strftime("%Y-%m-%d")
 
-            position["sell_price"] = position["current_price"]
+            position["sell_price"] = current_price
 
             position["exit_reason"] = decision["reason"]
 
             sold_positions.append(position)
 
             print(
-
-                f"SELL : {position['symbol']}"
-
-                f" ({decision['reason']})"
-
+                f"SELL : {position['symbol']} "
+                f"({decision['reason']})"
             )
 
             record_trade(position)
