@@ -1,4 +1,4 @@
-from datetime import datetime
+ifrom datetime import datetime
 
 from app.journal.recorder import record_trade
 
@@ -152,13 +152,6 @@ def process_exits():
             buy_date=position["buy_date"],
 
             time_stop_days=settings["time_stop_days"],
-
-            buy_price=position["buy_price"],
-
-            break_even=position.get(
-                "break_even",
-                False
-            )
 
         )
 
